@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import { Divider, Grid, Paper } from '@material-ui/core';
+import {Divider, Grid, Paper} from '@material-ui/core';
 
 import useStyles from './useStyles';
 
@@ -16,7 +16,11 @@ const Home = () => {
           <p>Maykon Michel - 181022656</p>
           <Divider />
           <p>
-            Código fonte em: <a href="https://github.com/maykonmichel/4620AT1">https://github.com/maykonmichel/4620AT1</a>
+            Código fonte em:
+            <a href="https://github.com/maykonmichel/4620AT1">
+              {` `}
+              https://github.com/maykonmichel/4620AT1
+            </a>
           </p>
         </Paper>
       </Grid>

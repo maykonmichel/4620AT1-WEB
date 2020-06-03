@@ -1,6 +1,6 @@
-import React, { memo, useCallback } from 'react';
-import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import React, {memo, useCallback} from 'react';
+import {AppBar, IconButton, Toolbar, Typography} from '@material-ui/core';
+import {useHistory} from 'react-router-dom';
 
 import HeaderItem from '../HeaderItem';
 
