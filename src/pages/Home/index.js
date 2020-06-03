@@ -1,5 +1,6 @@
 import React, {memo} from 'react';
 import {Divider, Grid, Paper} from '@material-ui/core';
+import clsx from 'clsx';
 
 import useStyles from './useStyles';
 
@@ -9,7 +10,7 @@ const Home = () => {
   return (
     <Grid container justify="center">
       <Grid item xs={12} lg={5}>
-        <Paper className={[classes.paper, classes.form]}>
+        <Paper className={clsx([classes.paper, classes.form])}>
           <h1>Alunos</h1>
           <p>Gabriel de Mello - 181025728</p>
           <p>Jamilly Souza - 181020416</p>
