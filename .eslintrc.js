@@ -2,6 +2,9 @@ module.exports = {
   root: true,
   extends: ['airbnb', 'prettier'],
   plugins: ['prettier'],
+  globals: {
+    'localStorage': 'true',
+  },
   rules: {
     'prettier/prettier': 'error',
     'react/jsx-filename-extension': 'off',
