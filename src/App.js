@@ -1,9 +1,9 @@
 import React from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import {ApolloProvider} from '@apollo/client';
 
 import Header from './components/Header';
-import Home from './pages/Home';
+import Pages from './pages';
 import useApi from './store/useApi';
 
 export default () => {
@@ -14,11 +14,7 @@ export default () => {
       <ApolloProvider client={api}>
         <BrowserRouter>
           <Header />
-          <Switch>
-            <Route path="/" exact>
-              <Home />
-            </Route>
-          </Switch>
+          <Pages />
         </BrowserRouter>
       </ApolloProvider>
     )
