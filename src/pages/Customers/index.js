@@ -18,10 +18,10 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
-import DELETE_MOVIE from '../../store/gql/mutation/DELETE_MOVIE';
-import UPDATE_MOVIE from '../../store/gql/mutation/UPDATE_MOVIE';
-import ADD_MOVIE from '../../store/gql/mutation/ADD_MOVIE';
-import LIST_MOVIES from '../../store/gql/query/LIST_MOVIES';
+import DELETE_CUSTOMER from '../../store/gql/mutation/DELETE_CUSTOMER';
+import UPDATE_CUSTOMER from '../../store/gql/mutation/UPDATE_CUSTOMER';
+import ADD_CUSTOMER from '../../store/gql/mutation/ADD_CUSTOMER';
+import LIST_CUSTOMERS from '../../store/gql/query/LIST_CUSTOMERS';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -51,42 +51,38 @@ const montaColunas = () => {
   return [
     {title: 'ID', field: 'id', editable: 'never'},
     {title: 'NOME', field: 'name'},
-    {title: 'PREÇO', field: 'price', type: 'numeric'},
-    {title: 'GENERO', field: 'genre'},
-    {title: 'DISPONIVEL', field: 'available', editable: 'never'},
-    {title: 'NOTA', field: 'rating', type: 'numeric'},
+    {title: 'RG', field: 'rg'},
+    {title: 'CPF', field: 'cpf'},
   ];
 };
 
 const montaLinhas = (data) => {
-  return data.movies.map((detail) => {
+  return data.customers.map((detail) => {
     return {
       id: detail.id,
       name: detail.name,
-      price: detail.price,
-      genre: detail.genre,
-      available: detail.available ? 'Sim' : 'Não',
-      rating: detail.rating,
+      rg: detail.rg,
+      cpf: detail.cpf,
     };
   });
 };
 
-const setValue = (newData, id, available) => {
+const setValue = (newData, id) => {
   return {
     id,
     name: newData.name,
-    price: newData.price,
-    genre: newData.genre,
-    available: available ? 'Sim' : 'Não',
-    rating: newData.rating,
+    rg: newData.rg,
+    cpf: newData.cpf,
   };
 };
 
-const Movies = () => {
-  const responseApi = useQuery(LIST_MOVIES, {fetchPolicy: 'cache-and-network'});
-  const [addMovie] = useMutation(ADD_MOVIE);
-  const [updateMovie] = useMutation(UPDATE_MOVIE);
-  const [removeMovie] = useMutation(DELETE_MOVIE);
+const Customers = () => {
+  const responseApi = useQuery(LIST_CUSTOMERS, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const [addCustomer] = useMutation(ADD_CUSTOMER);
+  const [updateCustomer] = useMutation(UPDATE_CUSTOMER);
+  const [removeCustomer] = useMutation(DELETE_CUSTOMER);
 
   const [state, setState] = React.useState({
     columns: montaColunas(),
@@ -104,22 +100,21 @@ const Movies = () => {
           onRowAdd: async (newData) => {
             const {
               data: {
-                addMovie: {id, available},
+                addCustomer: {id},
               },
-            } = await addMovie({
+            } = await addCustomer({
               variables: {
                 input: {
                   name: newData.name,
-                  price: +newData.price,
-                  genre: newData.genre,
-                  rating: +newData.rating,
+                  rg: newData.rg,
+                  cpf: newData.cpf,
                 },
               },
             });
 
             setState((prevState) => {
               const data = [...prevState.data];
-              data.push(setValue(newData, id, available));
+              data.push(setValue(newData, id));
               return {...prevState, data};
             });
           },
@@ -127,29 +122,28 @@ const Movies = () => {
           onRowUpdate: async (newData, oldData) => {
             const {
               data: {
-                updateMovie: {id, available},
+                updateCustomer: {id},
               },
-            } = await updateMovie({
+            } = await updateCustomer({
               variables: {
                 input: {
                   id: oldData.id,
                   name: newData.name,
-                  price: +newData.price,
-                  genre: newData.genre,
-                  rating: +newData.rating,
+                  rg: newData.rg,
+                  cpf: newData.cpf,
                 },
               },
             });
 
             setState((prevState) => {
               const data = [...prevState.data];
-              data[data.indexOf(oldData)] = setValue(newData, id, available);
+              data[data.indexOf(oldData)] = setValue(newData, id);
               return {...prevState, data};
             });
           },
 
           onRowDelete: async (oldData) => {
-            await removeMovie({variables: {id: oldData.id}});
+            await removeCustomer({variables: {id: oldData.id}});
 
             setState((prevState) => {
               const data = [...prevState.data];
@@ -163,4 +157,4 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default Customers;

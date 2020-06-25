@@ -1,5 +1,6 @@
 import React, {forwardRef} from 'react';
 import {useQuery, useMutation} from '@apollo/client';
+import {flatten} from 'ramda';
 
 import MaterialTable from 'material-table';
 import AddBox from '@material-ui/icons/AddBox';
@@ -18,10 +19,10 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
-import DELETE_MOVIE from '../../store/gql/mutation/DELETE_MOVIE';
-import UPDATE_MOVIE from '../../store/gql/mutation/UPDATE_MOVIE';
-import ADD_MOVIE from '../../store/gql/mutation/ADD_MOVIE';
-import LIST_MOVIES from '../../store/gql/query/LIST_MOVIES';
+import DELETE_MEDIA from '../../store/gql/mutation/DELETE_MEDIA';
+import UPDATE_MEDIA from '../../store/gql/mutation/UPDATE_MEDIA';
+import ADD_MEDIA from '../../store/gql/mutation/ADD_MEDIA';
+import LIST_MOVIES from '../../store/gql/query/LIST_MEDIAS';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -49,44 +50,45 @@ const tableIcons = {
 
 const montaColunas = () => {
   return [
-    {title: 'ID', field: 'id', editable: 'never'},
-    {title: 'NOME', field: 'name'},
-    {title: 'PREÇO', field: 'price', type: 'numeric'},
-    {title: 'GENERO', field: 'genre'},
+    {title: 'ID FILME', field: 'id', editable: 'onAdd'},
+    {title: 'NOME FILME', field: 'name', editable: 'never'},
+    {title: 'ID MIDIA', field: 'idMedia', editable: 'never'},
     {title: 'DISPONIVEL', field: 'available', editable: 'never'},
-    {title: 'NOTA', field: 'rating', type: 'numeric'},
+    {title: 'LOCALIZACAO', field: 'location'},
   ];
 };
 
 const montaLinhas = (data) => {
-  return data.movies.map((detail) => {
-    return {
-      id: detail.id,
-      name: detail.name,
-      price: detail.price,
-      genre: detail.genre,
-      available: detail.available ? 'Sim' : 'Não',
-      rating: detail.rating,
-    };
-  });
+  return flatten(
+    data.movies.map((detail) => {
+      return detail.medias.map((d) => {
+        return {
+          id: detail.id,
+          name: detail.name,
+          idMedia: d.id,
+          available: d.available ? 'Sim' : 'Não',
+          location: d.location,
+        };
+      });
+    }),
+  );
 };
 
 const setValue = (newData, id, available) => {
   return {
-    id,
+    id: newData.id,
+    idMedia: id,
     name: newData.name,
-    price: newData.price,
-    genre: newData.genre,
     available: available ? 'Sim' : 'Não',
-    rating: newData.rating,
+    location: newData.location,
   };
 };
 
-const Movies = () => {
+const Medias = () => {
   const responseApi = useQuery(LIST_MOVIES, {fetchPolicy: 'cache-and-network'});
-  const [addMovie] = useMutation(ADD_MOVIE);
-  const [updateMovie] = useMutation(UPDATE_MOVIE);
-  const [removeMovie] = useMutation(DELETE_MOVIE);
+  const [addMedia] = useMutation(ADD_MEDIA);
+  const [updateMedia] = useMutation(UPDATE_MEDIA);
+  const [removeMedia] = useMutation(DELETE_MEDIA);
 
   const [state, setState] = React.useState({
     columns: montaColunas(),
@@ -104,15 +106,13 @@ const Movies = () => {
           onRowAdd: async (newData) => {
             const {
               data: {
-                addMovie: {id, available},
+                addMedia: {id, available},
               },
-            } = await addMovie({
+            } = await addMedia({
               variables: {
                 input: {
-                  name: newData.name,
-                  price: +newData.price,
-                  genre: newData.genre,
-                  rating: +newData.rating,
+                  movie: newData.id,
+                  location: newData.location,
                 },
               },
             });
@@ -127,16 +127,13 @@ const Movies = () => {
           onRowUpdate: async (newData, oldData) => {
             const {
               data: {
-                updateMovie: {id, available},
+                updateMedia: {id, available},
               },
-            } = await updateMovie({
+            } = await updateMedia({
               variables: {
                 input: {
-                  id: oldData.id,
-                  name: newData.name,
-                  price: +newData.price,
-                  genre: newData.genre,
-                  rating: +newData.rating,
+                  id: oldData.idMedia,
+                  location: newData.location,
                 },
               },
             });
@@ -149,7 +146,7 @@ const Movies = () => {
           },
 
           onRowDelete: async (oldData) => {
-            await removeMovie({variables: {id: oldData.id}});
+            await removeMedia({variables: {id: oldData.idMedia}});
 
             setState((prevState) => {
               const data = [...prevState.data];
@@ -163,4 +160,4 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default Medias;
