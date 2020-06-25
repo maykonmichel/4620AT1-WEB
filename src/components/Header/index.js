@@ -34,6 +34,7 @@ const Header = memo(() => {
           <HeaderItem path="/employees" title="Funcionarios" />
           <HeaderItem path="/customers" title="Clientes" />
           <HeaderItem path="/movies" title="Filmes" />
+          <HeaderItem path="/medias" title="Midias" />
         </Toolbar>
       </AppBar>
     </div>

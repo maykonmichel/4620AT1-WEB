@@ -1,5 +1,6 @@
 import React, {forwardRef} from 'react';
 import {useQuery, useMutation} from '@apollo/client';
+import {flatten} from 'ramda';
 
 import MaterialTable from 'material-table';
 import AddBox from '@material-ui/icons/AddBox';
@@ -18,10 +19,10 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
-import DELETE_CUSTOMER from '../../store/gql/mutation/DELETE_CUSTOMER';
-import UPDATE_CUSTOMER from '../../store/gql/mutation/UPDATE_CUSTOMER';
-import ADD_CUSTOMER from '../../store/gql/mutation/ADD_CUSTOMER';
-import LIST_CUSTOMERS from '../../store/gql/query/LIST_CUSTOMERS';
+import DELETE_MEDIA from '../../store/gql/mutation/DELETE_MEDIA';
+import UPDATE_MEDIA from '../../store/gql/mutation/UPDATE_MEDIA';
+import ADD_MEDIA from '../../store/gql/mutation/ADD_MEDIA';
+import LIST_MOVIES from '../../store/gql/query/LIST_MEDIAS';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -49,40 +50,45 @@ const tableIcons = {
 
 const montaColunas = () => {
   return [
-    {title: 'ID', field: 'id', editable: 'never'},
-    {title: 'NOME', field: 'name'},
-    {title: 'RG', field: 'rg'},
-    {title: 'CPF', field: 'cpf'},
+    {title: 'ID FILME', field: 'id', editable: 'onAdd'},
+    {title: 'NOME FILME', field: 'name', editable: 'never'},
+    {title: 'ID MIDIA', field: 'idMedia', editable: 'never'},
+    {title: 'DISPONIVEL', field: 'available', editable: 'never'},
+    {title: 'LOCALIZACAO', field: 'location'},
   ];
 };
 
 const montaLinhas = (data) => {
-  return data.customers.map((detail) => {
-    return {
-      id: detail.id,
-      name: detail.name,
-      rg: detail.rg,
-      cpf: detail.cpf,
-    };
-  });
+  return flatten(
+    data.movies.map((detail) => {
+      return detail.medias.map((d) => {
+        return {
+          id: detail.id,
+          name: detail.name,
+          idMedia: d.id,
+          available: d.available ? 'Sim' : 'Não',
+          location: d.location,
+        };
+      });
+    }),
+  );
 };
 
-const setValue = (newData, id) => {
+const setValue = (newData, id, available) => {
   return {
-    id,
+    id: newData.id,
+    idMedia: id,
     name: newData.name,
-    rg: newData.rg,
-    cpf: newData.cpf,
+    available: available ? 'Sim' : 'Não',
+    location: newData.location,
   };
 };
 
-const Customers = () => {
-  const responseApi = useQuery(LIST_CUSTOMERS, {
-    fetchPolicy: 'cache-and-network',
-  });
-  const [addCustomer] = useMutation(ADD_CUSTOMER);
-  const [updateCustomer] = useMutation(UPDATE_CUSTOMER);
-  const [removeCustomer] = useMutation(DELETE_CUSTOMER);
+const Medias = () => {
+  const responseApi = useQuery(LIST_MOVIES, {fetchPolicy: 'cache-and-network'});
+  const [addMedia] = useMutation(ADD_MEDIA);
+  const [updateMedia] = useMutation(UPDATE_MEDIA);
+  const [removeMedia] = useMutation(DELETE_MEDIA);
 
   const [state, setState] = React.useState({
     columns: montaColunas(),
@@ -100,21 +106,20 @@ const Customers = () => {
           onRowAdd: async (newData) => {
             const {
               data: {
-                addCustomer: {id},
+                addMedia: {id, available},
               },
-            } = await addCustomer({
+            } = await addMedia({
               variables: {
                 input: {
-                  name: newData.name,
-                  rg: newData.rg,
-                  cpf: newData.cpf,
+                  movie: newData.id,
+                  location: newData.location,
                 },
               },
             });
 
             setState((prevState) => {
               const data = [...prevState.data];
-              data.push(setValue(newData, id));
+              data.push(setValue(newData, id, available));
               return {...prevState, data};
             });
           },
@@ -122,28 +127,26 @@ const Customers = () => {
           onRowUpdate: async (newData, oldData) => {
             const {
               data: {
-                updateCustomer: {id},
+                updateMedia: {id, available},
               },
-            } = await updateCustomer({
+            } = await updateMedia({
               variables: {
                 input: {
-                  id: oldData.id,
-                  name: newData.name,
-                  rg: newData.rg,
-                  cpf: newData.cpf,
+                  id: oldData.idMedia,
+                  location: newData.location,
                 },
               },
             });
 
             setState((prevState) => {
               const data = [...prevState.data];
-              data[data.indexOf(oldData)] = setValue(newData, id);
+              data[data.indexOf(oldData)] = setValue(newData, id, available);
               return {...prevState, data};
             });
           },
 
           onRowDelete: async (oldData) => {
-            await removeCustomer({variables: {id: oldData.id}});
+            await removeMedia({variables: {id: oldData.idMedia}});
 
             setState((prevState) => {
               const data = [...prevState.data];
@@ -157,4 +160,4 @@ const Customers = () => {
   );
 };
 
-export default Customers;
+export default Medias;

@@ -17,6 +17,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+
 import DELETE_MOVIE from '../../store/gql/mutation/DELETE_MOVIE';
 import UPDATE_MOVIE from '../../store/gql/mutation/UPDATE_MOVIE';
 import ADD_MOVIE from '../../store/gql/mutation/ADD_MOVIE';
@@ -48,11 +49,11 @@ const tableIcons = {
 
 const montaColunas = () => {
   return [
-    {title: 'ID', field: 'id'},
+    {title: 'ID', field: 'id', editable: 'never'},
     {title: 'NOME', field: 'name'},
     {title: 'PREÇO', field: 'price', type: 'numeric'},
     {title: 'GENERO', field: 'genre'},
-    {title: 'DISPONIVEL', field: 'available'},
+    {title: 'DISPONIVEL', field: 'available', editable: 'never'},
     {title: 'NOTA', field: 'rating', type: 'numeric'},
   ];
 };
@@ -89,7 +90,7 @@ const Movies = () => {
 
   const [state, setState] = React.useState({
     columns: montaColunas(),
-    data: montaLinhas(responseApi.data),
+    data: montaLinhas(responseApi.data || {}),
   });
 
   return (
@@ -136,7 +137,6 @@ const Movies = () => {
                   price: +newData.price,
                   genre: newData.genre,
                   rating: +newData.rating,
-                  available: newData.available === 'Sim',
                 },
               },
             });
