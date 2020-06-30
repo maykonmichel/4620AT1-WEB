@@ -58,9 +58,9 @@ const montaColunas = () => {
   ];
 };
 
-const montaLinhas = (data) => {
+const montaLinhas = ({movies = []}) => {
   return flatten(
-    data.movies.map((detail) => {
+    movies.map((detail) => {
       return detail.medias.map((d) => {
         return {
           id: detail.id,

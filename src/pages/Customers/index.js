@@ -56,8 +56,8 @@ const montaColunas = () => {
   ];
 };
 
-const montaLinhas = (data) => {
-  return data.customers.map((detail) => {
+const montaLinhas = ({customers = []}) => {
+  return customers.map((detail) => {
     return {
       id: detail.id,
       name: detail.name,

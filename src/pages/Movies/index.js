@@ -58,8 +58,8 @@ const montaColunas = () => {
   ];
 };
 
-const montaLinhas = (data) => {
-  return data.movies.map((detail) => {
+const montaLinhas = ({movies}) => {
+  return movies.map((detail) => {
     return {
       id: detail.id,
       name: detail.name,
