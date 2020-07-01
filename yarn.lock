@@ -9269,6 +9269,14 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-alert@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/react-alert/-/react-alert-7.0.1.tgz#92d135542af75c944baf868cec81055de557353c"
+  integrity sha512-pHtMtP8gFQ4hLVQ/j7HIaayjvVNoMgoZHCag8YYBUpsLcamj0+435PJdZR7oh7AVbW0C2JPvNmS5+Md1Y59oew==
+  dependencies:
+    prop-types "^15.7.2"
+    react-transition-group "^4.3.0"
+
 react-app-polyfill@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-1.0.6.tgz#890f8d7f2842ce6073f030b117de9130a5f385f0"
@@ -9449,7 +9457,7 @@ react-scripts@3.4.1:
   optionalDependencies:
     fsevents "2.1.2"
 
-react-transition-group@^4.0.0, react-transition-group@^4.4.0:
+react-transition-group@^4.0.0, react-transition-group@^4.3.0, react-transition-group@^4.4.0:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.1.tgz#63868f9325a38ea5ee9535d828327f85773345c9"
   integrity sha512-Djqr7OQ2aPUiYurhPalTrVy9ddmFCCzwhqQmtN+J3+3DzLO209Fdr70QrN8Z3DsglWql6iY1lDWAfpFiBtuKGw==

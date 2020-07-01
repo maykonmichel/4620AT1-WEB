@@ -2,12 +2,11 @@ import gql from 'graphql-tag';
 
 export default gql`
   query {
-    movies {
-      genre
+    employees {
       id
+      pis
       name
-      price
-      rating
+      rg
     }
   }
 `;

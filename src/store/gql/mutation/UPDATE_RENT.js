@@ -1,13 +1,9 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query {
-    movies {
-      genre
+  mutation($input: RefundRentInput!) {
+    refundRent(input: $input) {
       id
-      name
-      price
-      rating
     }
   }
 `;

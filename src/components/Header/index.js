@@ -31,6 +31,8 @@ const Header = memo(() => {
           <Typography variant="h6" className={classes.title}>
             1º trabalho - Banco de dados: locadora
           </Typography>
+          <HeaderItem path="/history" title="Historico" />
+          <HeaderItem path="/rent-refund" title="Aluguel" />
           <HeaderItem path="/employees" title="Funcionarios" />
           <HeaderItem path="/customers" title="Clientes" />
           <HeaderItem path="/movies" title="Filmes" />
