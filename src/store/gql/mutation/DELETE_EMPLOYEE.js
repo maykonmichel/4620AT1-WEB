@@ -1,13 +1,9 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query {
-    movies {
-      genre
+  mutation($id: ID!) {
+    removeEmployee(id: $id) {
       id
-      name
-      price
-      rating
     }
   }
 `;

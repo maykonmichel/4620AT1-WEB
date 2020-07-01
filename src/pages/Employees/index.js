@@ -18,10 +18,10 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
-import DELETE_MOVIE from '../../store/gql/mutation/DELETE_MOVIE';
-import UPDATE_MOVIE from '../../store/gql/mutation/UPDATE_MOVIE';
-import ADD_MOVIE from '../../store/gql/mutation/ADD_MOVIE';
-import LIST_MOVIES from '../../store/gql/query/LIST_MOVIES';
+import DELETE_EMPLOYEE from '../../store/gql/mutation/DELETE_EMPLOYEE';
+import UPDATE_EMPLOYEE from '../../store/gql/mutation/UPDATE_EMPLOYEE';
+import ADD_EMPLOYEE from '../../store/gql/mutation/ADD_EMPLOYEE';
+import LIST_EMPLOYEES from '../../store/gql/query/LIST_EMPLOYEES';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -51,20 +51,18 @@ const montaColunas = () => {
   return [
     {title: 'ID', field: 'id', editable: 'never'},
     {title: 'NOME', field: 'name'},
-    {title: 'PREÇO', field: 'price', type: 'numeric'},
-    {title: 'GENERO', field: 'genre'},
-    {title: 'NOTA', field: 'rating', type: 'numeric'},
+    {title: 'RG', field: 'rg'},
+    {title: 'PIS', field: 'pis', type: 'numeric'},
   ];
 };
 
 const montaLinhas = (data) => {
-  return data.movies.map((detail) => {
+  return data.employees.map((detail) => {
     return {
       id: detail.id,
       name: detail.name,
-      price: detail.price,
-      genre: detail.genre,
-      rating: detail.rating,
+      rg: detail.rg,
+      pis: detail.pis,
     };
   });
 };
@@ -73,17 +71,18 @@ const setValue = (newData, id) => {
   return {
     id,
     name: newData.name,
-    price: newData.price,
-    genre: newData.genre,
-    rating: newData.rating,
+    rg: newData.rg,
+    pis: newData.pis,
   };
 };
 
-const Movies = () => {
-  const responseApi = useQuery(LIST_MOVIES, {fetchPolicy: 'cache-and-network'});
-  const [addMovie] = useMutation(ADD_MOVIE);
-  const [updateMovie] = useMutation(UPDATE_MOVIE);
-  const [removeMovie] = useMutation(DELETE_MOVIE);
+const Employees = () => {
+  const responseApi = useQuery(LIST_EMPLOYEES, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const [addEmployee] = useMutation(ADD_EMPLOYEE);
+  const [updateEmployee] = useMutation(UPDATE_EMPLOYEE);
+  const [removeEmployee] = useMutation(DELETE_EMPLOYEE);
 
   const [state, setState] = React.useState({
     columns: montaColunas(),
@@ -101,15 +100,14 @@ const Movies = () => {
           onRowAdd: async (newData) => {
             const {
               data: {
-                addMovie: {id},
+                addEmployee: {id},
               },
-            } = await addMovie({
+            } = await addEmployee({
               variables: {
                 input: {
                   name: newData.name,
-                  price: +newData.price,
-                  genre: newData.genre,
-                  rating: +newData.rating,
+                  rg: newData.rg,
+                  pis: newData.pis,
                 },
               },
             });
@@ -124,16 +122,15 @@ const Movies = () => {
           onRowUpdate: async (newData, oldData) => {
             const {
               data: {
-                updateMovie: {id},
+                updateEmployee: {id},
               },
-            } = await updateMovie({
+            } = await updateEmployee({
               variables: {
                 input: {
                   id: oldData.id,
                   name: newData.name,
-                  price: +newData.price,
-                  genre: newData.genre,
-                  rating: +newData.rating,
+                  rg: newData.rg,
+                  pis: newData.pis,
                 },
               },
             });
@@ -146,7 +143,7 @@ const Movies = () => {
           },
 
           onRowDelete: async (oldData) => {
-            await removeMovie({variables: {id: oldData.id}});
+            await removeEmployee({variables: {id: oldData.id}});
 
             setState((prevState) => {
               const data = [...prevState.data];
@@ -160,4 +157,4 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default Employees;
