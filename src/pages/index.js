@@ -7,12 +7,16 @@ import Customers from './Customers';
 import Medias from './Medias';
 import Employees from './Employees';
 import RentRefund from './RentRefund';
+import History from './History';
 
 const Pages = () => {
   return (
     <Switch>
       <Route path="/" exact>
         <Home />
+      </Route>
+      <Route path="/history" exact>
+        <History />
       </Route>
       <Route path="/rent-refund" exact>
         <RentRefund />

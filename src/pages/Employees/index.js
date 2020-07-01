@@ -52,7 +52,7 @@ const montaColunas = () => {
     {title: 'ID', field: 'id', editable: 'never'},
     {title: 'NOME', field: 'name'},
     {title: 'RG', field: 'rg'},
-    {title: 'PIS', field: 'pis', type: 'numeric'},
+    {title: 'PIS', field: 'pis'},
   ];
 };
 
